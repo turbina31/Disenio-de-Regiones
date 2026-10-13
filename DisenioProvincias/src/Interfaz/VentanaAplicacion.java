@@ -45,8 +45,6 @@ public class VentanaAplicacion extends JFrame {
 	private final Map<String, Coordenada> coordenadasCargadas = new HashMap<>();
 
 	private EstiloGrafo panelGrafo;
-	//private JTextField txtK;
-	//private JLabel lblStatus;
 	private Mapa mapa;
 
 	public static void main(String[] args) {
@@ -101,14 +99,6 @@ public class VentanaAplicacion extends JFrame {
 
 		barra.add(Box.createHorizontalStrut(12));
 
-		/*barra.add(new JLabel("k ="));
-		txtK = new JTextField("4", 3);
-		barra.add(txtK);*/
-
-		/*JButton btnEjecutar = EstiloBoton.crearBoton("Ejecutar algoritmo", true);
-		btnEjecutar.addActionListener(e -> ejecutarAlgoritmo());
-		barra.add(btnEjecutar);*/
-
 		JButton btnArbol = EstiloBoton.crearBoton("Ver Árbol Mínimo", true);
 		btnArbol.addActionListener(e -> mostrarArbolMinimo());
 		barra.add(btnArbol);
@@ -134,13 +124,11 @@ public class VentanaAplicacion extends JFrame {
 		mapa.mostrarProvincias(grafo, coordenadasDelGrafo());
 	}
 
-	/** Minúsculas, sin tildes y sin espacios sobrantes: "Entre Ríos " == "entre rios". */
 	private static String normalizar(String s) {
 		String t = Normalizer.normalize(s.trim(), Normalizer.Form.NFD);
 		return t.replaceAll("\\p{M}", "").replaceAll("\\s+", " ").toLowerCase();
 	}
 
-	/** Asocia cada provincia del grafo con su coordenada, comparando nombres normalizados. */
 	private Map<String, Coordenada> coordenadasDelGrafo() {
 		Map<String, Coordenada> porNombre = new HashMap<>();
 		for (Coordenada c : coordenadasCargadas.values()) {
@@ -156,7 +144,6 @@ public class VentanaAplicacion extends JFrame {
 		return resultado;
 	}
 
-	/** Texto con las provincias del grafo que no tienen coordenada. */
 	private String provinciasSinCoordenada() {
 		Map<String, Coordenada> coordenada = coordenadasDelGrafo();
 		List<String> faltan = new ArrayList<>();
@@ -186,7 +173,6 @@ public class VentanaAplicacion extends JFrame {
 
 		invalidarResultados();
 		refrescarVistas();
-		//lblStatus.setText(" Provincia agregada: " + nombre);
 	}
 
 	private void borrarProvincia() {
@@ -197,7 +183,6 @@ public class VentanaAplicacion extends JFrame {
 		posiciones.remove(eliminada);
 		invalidarResultados();
 		refrescarVistas();
-		//lblStatus.setText(" Provincia eliminada: " + eliminada);
 	}
 
 	private void agregarSimilaridad() {
@@ -247,7 +232,6 @@ public class VentanaAplicacion extends JFrame {
 		grafo.agregarArista(u, v, sim); // si ya existía, actualiza el peso
 		invalidarResultados();
 		refrescarVistas();
-		//lblStatus.setText(String.format(" Similaridad: %s – %s = %.2f", u, v, sim));
 	}
 
 	private void limpiar() {
@@ -311,8 +295,6 @@ public class VentanaAplicacion extends JFrame {
 			}
 
 			refrescarVistas();
-			//lblStatus.setText(" Coordenadas cargadas: " + datos.tamanio() + " provincias, " + agregadas
-				//	+ " agregadas al grafo" + provinciasSinCoordenada());
 
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, "Error al cargar coordenadas:\n" + ex.getMessage(), "Error",
@@ -365,78 +347,7 @@ public class VentanaAplicacion extends JFrame {
 
 		coordenadasCargadas.put(provincia, new Coordenada(provincia, latitud, longitud));
 		refrescarVistas();
-		//lblStatus.setText(String.format(" Coordenada agregada: %s → (%.4f, %.4f)", provincia, latitud, longitud));
 	}
-
-	// ==================== ALGORITMO ====================
-
-	/*private void ejecutarAlgoritmo() {
-		int n = grafo.tamanio();
-		if (n == 0) {
-			JOptionPane.showMessageDialog(this, "El grafo está vacío.");
-			return;
-		}
-
-		int k;
-		try {
-			k = Integer.parseInt(txtK.getText().trim());
-		} catch (NumberFormatException ex) {
-			JOptionPane.showMessageDialog(this, "k debe ser un entero positivo.");
-			return;
-		}
-		if (k < 1 || k > n) {
-			JOptionPane.showMessageDialog(this, "k debe estar entre 1 y " + n);
-			return;
-		}
-
-		// 1. Árbol (o bosque) generador mínimo
-		List<Arista<String>> mst = new ArrayList<>(Kruskal.ejecutar(grafo));
-
-		// Si el grafo no es conexo, ya hay (n - |mst|) componentes de entrada
-		int componentesIniciales = n - mst.size();
-		if (k < componentesIniciales) {
-			JOptionPane.showMessageDialog(this,
-					"El grafo no es conexo: ya tiene " + componentesIniciales + " componentes.\n"
-							+ "No se puede formar menos regiones que eso. Se usarán " + componentesIniciales + ".");
-			k = componentesIniciales;
-		}
-
-		// 2. Quitar las (k - componentesIniciales) aristas más pesadas
-		mst.sort((a, b) -> Double.compare(b.obtenerPeso(), a.obtenerPeso()));
-		int aQuitar = k - componentesIniciales;
-		List<Arista<String>> restantes = new ArrayList<>(mst.subList(aQuitar, mst.size()));
-
-		// 3. Componentes con UnionFind
-		List<String> vertices = new ArrayList<>(grafo.obtenerVertices());
-		Map<String, Integer> indice = new HashMap<>();
-		for (int i = 0; i < vertices.size(); i++) {
-			indice.put(vertices.get(i), i);
-		}
-
-		UnionFind uf = new UnionFind(vertices.size());
-		for (Arista<String> a : restantes) {
-			uf.union(indice.get(a.obtenerOrigen()), indice.get(a.obtenerDestino()));
-		}
-
-		// 4. Asignar regiones
-		regionDe.clear();
-		Map<Integer, Integer> raizARegion = new HashMap<>();
-		int idRegion = 0;
-		for (String v : vertices) {
-			int raiz = uf.root(indice.get(v));
-			if (!raizARegion.containsKey(raiz)) {
-				raizARegion.put(raiz, idRegion++);
-			}
-			regionDe.put(v, raizARegion.get(raiz));
-		}
-
-		panelGrafo.mostrarArbol = false;
-		panelGrafo.actualizarReferencias(grafo, posiciones, regionDe);
-		panelGrafo.repaint();
-		mapa.mostrarGrafo(grafo, coordenadasDelGrafo(), restantes, true);
-
-		lblStatus.setText(String.format(" Algoritmo ejecutado → %d regiones formadas (k = %d)", idRegion, k));
-	}*/
 
 	private void mostrarArbolMinimo() {
 		if (grafo.tamanio() == 0)
@@ -453,6 +364,5 @@ public class VentanaAplicacion extends JFrame {
 		if (agm.size() < grafo.tamanio() - 1) {
 			texto += " (el grafo no es conexo: es un bosque)";
 		}
-		//lblStatus.setText(texto);
 	}
 }
