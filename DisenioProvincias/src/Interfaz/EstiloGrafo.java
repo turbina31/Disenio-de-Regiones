@@ -37,7 +37,6 @@ public class EstiloGrafo extends JPanel {
         setBackground(EstiloBoton.FONDO_PANEL);
     }
 
-    /** Actualiza las referencias si cambian desde VentanaAplicacion */
     public void actualizarReferencias(Grafo<String> grafo,
                                       Map<String, Point> posiciones,
                                       Map<String, Integer> regionDe) {
