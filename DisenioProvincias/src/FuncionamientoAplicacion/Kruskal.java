@@ -8,11 +8,6 @@ import java.util.Map;
 
 public class Kruskal {
 
-    /**
-     * Devuelve las aristas del árbol generador mínimo.
-     * Si el grafo no es conexo devuelve un bosque generador mínimo
-     * (menos de n-1 aristas); usar {@link #esConexo(Grafo)} para saberlo.
-     */
     public static <T> List<Arista<T>> ejecutar(Grafo<T> grafo) {
         List<Arista<T>> arbol = new ArrayList<>();
 
@@ -46,7 +41,6 @@ public class Kruskal {
         return arbol;
     }
 
-    /** true si el grafo es conexo (el MST tiene n-1 aristas). */
     public static <T> boolean esConexo(Grafo<T> grafo) {
         int n = grafo.tamanio();
         return n <= 1 || ejecutar(grafo).size() == n - 1;
