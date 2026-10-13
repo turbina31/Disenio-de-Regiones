@@ -35,21 +35,10 @@ public class Mapa extends JPanel {
 		add(vistaMapa, BorderLayout.CENTER);
 	}
 
-	/**
-	 * Dibuja provincias (marcadores) y aristas (líneas) del grafo.
-	 */
 	public void mostrarProvincias(Grafo<String> grafo, Map<String, Coordenada> coordenadas) {
 		mostrarGrafo(grafo, coordenadas, null, false);
 	}
 
-	/**
-	 * Dibuja el grafo completo o solo el MST.
-	 *
-	 * @param grafo       grafo original
-	 * @param coordenadas mapa nombre → Coordenada
-	 * @param aristasMST  si no es null, dibuja solo esas aristas (MST)
-	 * @param soloMST     true = solo aristas del MST
-	 */
 	public void mostrarGrafo(Grafo<String> grafo, Map<String, Coordenada> coordenadas, List<Arista<String>> aristas,
 			boolean soloAGM) {
 
@@ -85,9 +74,8 @@ public class Mapa extends JPanel {
 		}
 
 		for (Arista<String> a : aristasADibujar) {
-// Probar ambos nombres de método por si tu Arista usa get o obtener
-			String origen = a.obtenerOrigen(); // si falla, usá a.getOrigen()
-			String destino = a.obtenerDestino(); // si falla, usá a.getDestino()
+			String origen = a.obtenerOrigen();
+			String destino = a.obtenerDestino();
 
 			Coordenada c1 = coordenadas.get(origen);
 			Coordenada c2 = coordenadas.get(destino);
@@ -100,7 +88,6 @@ public class Mapa extends JPanel {
 			Coordinate p1 = new Coordinate(c1.getLatitud(), c1.getLongitud());
 			Coordinate p2 = new Coordinate(c2.getLatitud(), c2.getLongitud());
 
-// Truco: agregar un punto intermedio muy cercano para que el polígono se vea como línea
 			List<Coordinate> puntos = new ArrayList<>();
 			puntos.add(p1);
 			puntos.add(p2);
@@ -113,9 +100,6 @@ public class Mapa extends JPanel {
 		vistaMapa.repaint();
 	}
 
-	/**
-	 * Muestra solo el Árbol Generador Mínimo sobre el mapa.
-	 */
 	public void mostrarArbolMinimo(Grafo<String> grafo, Map<String, Coordenada> coordenadas, List<Arista<String>> agm) {
 		mostrarGrafo(grafo, coordenadas, agm, true);
 	}
