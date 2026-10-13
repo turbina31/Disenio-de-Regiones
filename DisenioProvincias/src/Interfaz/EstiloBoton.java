@@ -31,11 +31,6 @@ public class EstiloBoton {
         new Color(251, 191, 36)   // amarillo
     };
 
-    /**
-     * Crea un botón con el estilo de la aplicación.
-     * @param texto      texto del botón
-     * @param principal  true = botón destacado (Ejecutar, Ver Árbol)
-     */
     public static JButton crearBoton(String texto, boolean principal) {
         JButton btn = new JButton(texto);
         btn.setFocusPainted(false);
