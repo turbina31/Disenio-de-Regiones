@@ -12,7 +12,6 @@ public class UnionFind {
         }
     }
 
-    /** Devuelve la raíz del conjunto de i (con compresión de caminos). */
     public int root(int i) {
         while (padre[i] != i) {
             padre[i] = padre[padre[i]];
@@ -25,7 +24,6 @@ public class UnionFind {
         return root(i) == root(j);
     }
 
-    /** Une los conjuntos (por rango). Devuelve false si ya estaban unidos. */
     public boolean union(int i, int j) {
         int ri = root(i);
         int rj = root(j);
