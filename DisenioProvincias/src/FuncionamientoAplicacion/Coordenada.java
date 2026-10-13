@@ -11,7 +11,6 @@ public class Coordenada {
 		this.lon = longitud;
 	}
 
-	// Constructor vacío necesario para Gson
 	public Coordenada() {
 	}
 
