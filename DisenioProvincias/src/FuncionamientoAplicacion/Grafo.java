@@ -46,10 +46,6 @@ public class Grafo<T> {
         return adyacencia.size();
     }
 
-    //public int cantidadVertices() {
-      //  return tamanio();
-    //}
-
     public Set<T> obtenerVertices() {
         return Collections.unmodifiableSet(adyacencia.keySet());
     }
@@ -113,7 +109,6 @@ public class Grafo<T> {
             return Collections.emptyList();
         }
         return Collections.unmodifiableList(lista);
-        //return adyacencia.getOrDefault(vertice, Collections.emptyList());
     }
 
     public Set<T> vecinos(T vertice) {
