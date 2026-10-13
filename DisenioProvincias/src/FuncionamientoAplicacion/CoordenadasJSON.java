@@ -55,7 +55,6 @@ public class CoordenadasJSON {
         guardarJSON(generarJSONPretty(), archivoDestino);
     }
 
-    /** Lee el JSON en UTF-8 (necesario para Córdoba, Neuquén, Tucumán...). */
     public static CoordenadasJSON leerJSON(String archivo) {
         try (BufferedReader br = Files.newBufferedReader(Paths.get(archivo), StandardCharsets.UTF_8)) {
             CoordenadasJSON ret = new Gson().fromJson(br, CoordenadasJSON.class);
@@ -63,7 +62,6 @@ public class CoordenadasJSON {
                 System.err.println("JSON vacío o sin la clave \"coordenadas\".");
                 return null;
             }
-            // Descartar entradas inválidas (sin nombre)
             ret.coordenadas.removeIf(c -> c == null || c.getNombre() == null || c.getNombre().trim().isEmpty());
             return ret;
         } catch (Exception e) {
