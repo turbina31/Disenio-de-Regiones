@@ -21,9 +21,6 @@ public class UtilidadesGrafo {
         return lista;
     }
 
-    /**
-     * Cuenta la cantidad de aristas únicas del grafo.
-     */
     public static <T> int contarAristasUnicas(Grafo<T> grafo) {
         return obtenerAristasUnicas(grafo).size();
     }
